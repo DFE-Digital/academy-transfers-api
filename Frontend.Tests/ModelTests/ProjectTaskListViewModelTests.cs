@@ -115,12 +115,41 @@ namespace Frontend.Tests.ModelTests
             }
 
             [Fact]
-            public void GivenListWithItem_ReturnTrue()
+            public void GivenListWithItemWithNoAcademy_ReturnFalse()
             {
                 var model = new ProjectTaskListViewModel
                 {
                     EducationPerformance = new EducationPerformance
                         {KeyStage5Performance = new List<KeyStage5> {new KeyStage5()}}
+                };
+                Assert.False(model.HasKeyStage5PerformanceInformation);
+            }
+
+            [Theory]
+            [InlineData("12.12", null)]
+            [InlineData("12.12", "")]
+            [InlineData(null, "12.12")]
+            [InlineData("", "12.12")]
+            [InlineData("12.12", "12.12")]
+            public void GivenListWithItemWithAcademyWithData_ReturnTrue(string academicAverage,
+                string appliedGeneralAverage)
+            {
+                var model = new ProjectTaskListViewModel
+                {
+                    EducationPerformance = new EducationPerformance
+                    {
+                        KeyStage5Performance = new List<KeyStage5>
+                        {
+                            new KeyStage5
+                            {
+                                Academy = new KeyStage5Result
+                                {
+                                    AcademicAverage = academicAverage,
+                                    AppliedGeneralAverage = appliedGeneralAverage
+                                }
+                            }
+                        }
+                    }
                 };
                 Assert.True(model.HasKeyStage5PerformanceInformation);
             }

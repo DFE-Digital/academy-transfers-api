@@ -14,9 +14,19 @@ namespace Frontend.Models
         public ProjectStatuses RationaleStatus => GetRationaleStatus();
         public ProjectStatuses AcademyAndTrustInformationStatus() => GetAcademyAndTrustInformationStatus();
 
-        public bool HasKeyStage5PerformanceInformation =>
-            EducationPerformance.KeyStage5Performance != null &&
-            EducationPerformance.KeyStage5Performance.Count > 0;
+        public bool HasKeyStage5PerformanceInformation
+        {
+            get
+            {
+                return EducationPerformance.KeyStage5Performance != null &&
+                       EducationPerformance.KeyStage5Performance.Any(ks5 =>
+                           ks5.Academy != null && (
+                               !string.IsNullOrEmpty(ks5.Academy.AcademicAverage) ||
+                               !string.IsNullOrEmpty(ks5.Academy.AppliedGeneralAverage)
+                           )
+                       );
+            }
+        }
 
         private ProjectStatuses GetAcademyAndTrustInformationStatus()
         {
